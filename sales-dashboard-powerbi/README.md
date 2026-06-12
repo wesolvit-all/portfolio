@@ -20,3 +20,7 @@ Analyze sales performance through KPIs and interactive visualizations.
 * Monthly Target Achievement Rate
 * Net Revenue by Sales Representative
 * Quarterly Filters
+
+  ## Dashboard Preview
+
+![Sales Dashboard](dashboard-overview.png)
