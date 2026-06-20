@@ -29,7 +29,7 @@ Um petshop recebe mensagens repetitivas no WhatsApp (horário, endereço, servi�
 ### 1. Recepção, filtro e roteamento por estado
 Webhook recebe a mensagem → filtra eventos duplicados/eco → busca a etapa salva do cliente na tabela → decide se segue para o menu inicial ou retoma um fluxo em andamento (como agendamento).
 
-![Recepção e roteamento](./Fluxon8n_petshop_3.png)
+![Recepção e roteamento](./Fluxon8n_petshop_1.png)
 
 ### 2. Menu de serviços (nível 1)
 Submenu com as opções principais de serviço — cada opção dispara uma resposta de texto fixo específica, sem IA.
@@ -39,7 +39,7 @@ Submenu com as opções principais de serviço — cada opção dispara uma resp
 ### 3. Menu de serviços adicionais (nível 2)
 Submenu de aprofundamento para serviços complementares (ozônio, escovação de dentes, tratamentos), mantendo a mesma lógica de resposta direta.
 
-![Menu de serviços adicionais](./Fluxon8n_petshop_1.png)
+![Menu de serviços adicionais](./Fluxon8n_petshop_3.png)
 
 ## 🛠️ Stack utilizada
 
