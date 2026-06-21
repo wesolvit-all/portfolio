@@ -1,58 +1,58 @@
-[README.md](https://github.com/user-attachments/files/29168884/README.md)
-# 🐾 Chatbot WhatsApp para PetShop — Automação com n8n
+[README_en.md](https://github.com/user-attachments/files/29169078/README_en.md)
+# 🐾 WhatsApp Chatbot for Pet Shop — Automation with n8n
 
-Automação completa de atendimento via WhatsApp para um petshop, construída no **n8n**, integrando **Evolution API** (WhatsApp), **IA local/cloud (Groq)** e um sistema de **controle de estado por cliente** para conversas com múltiplas etapas.
+End-to-end WhatsApp customer service automation for a pet shop, built in **n8n**, integrating **Evolution API** (WhatsApp), **AI (Groq)**, and a **per-customer state management system** to handle multi-step conversations.
 
-## 🎯 O problema que o projeto resolve
+## 🎯 The problem this project solves
 
-Um petshop recebe mensagens repetitivas no WhatsApp (horário, endereço, serviços, preços) que não precisam de inteligência artificial para serem respondidas — e perguntas pontuais que necessitavam de uma IA. O desafio era construir um fluxo que:
+A pet shop receives repetitive WhatsApp messages (business hours, address, services, prices) that don't need AI to be answered — alongside specific questions that do. The challenge was building a flow that:
 
-- Responda instantaneamente a perguntas comuns **sem gastar tokens de IA**
-- Use IA **apenas** quando a pergunta foge do menu padrão
-- Permita que o cliente inicie um **agendamento em várias etapas**, sem perder o contexto da conversa no meio do caminho
-- Não entre em loop ao processar as próprias mensagens enviadas pelo bot
+- Instantly answers common questions **without spending AI tokens**
+- Uses AI **only** when the question falls outside the standard menu
+- Lets the customer go through a **multi-step booking process** without losing conversation context along the way
+- Doesn't loop by processing the bot's own outgoing messages
 
-## 🧠 Decisões de arquitetura
+## 🧠 Architecture decisions
 
-**Estado por cliente, não por mensagem.** Cada cliente tem uma "etapa" salva em uma tabela (`estados_clientes`). Toda mensagem que chega primeiro consulta essa etapa antes de decidir o que fazer — isso evita que o bot "esqueça" que o cliente estava no meio de um agendamento e o jogue de volta pro menu inicial.
+**State per customer, not per message.** Each customer has a "stage" saved in a table (`estados_clientes`). Every incoming message first checks this stage before deciding what to do — this prevents the bot from "forgetting" that a customer was mid-booking and sending them back to the main menu.
 
-**Custo controlado.** Informações estáticas (endereço, horário, lista de serviços, preços) são respondidas com texto fixo, sem acionar IA. A IA (Groq) só é chamada quando a mensagem do cliente não se encaixa em nenhuma opção do menu.
+**Controlled cost.** Static information (address, hours, service list, prices) is answered with fixed text, without triggering AI. AI (Groq) is only called when the customer's message doesn't match any menu option.
 
-**Filtro de eco.** Como o WhatsApp via Evolution API dispara webhook tanto para mensagens recebidas quanto enviadas, o fluxo filtra por `fromMe: false` logo na entrada — evitando que o bot processe e responda às próprias mensagens.
+**Echo filtering.** Since the WhatsApp webhook via Evolution API fires for both incoming and outgoing messages, the flow filters by `fromMe: false` right at the entry point — preventing the bot from processing and responding to its own messages.
 
-## 🗺️ Visão geral do fluxo
+## 🗺️ Flow overview
 
-![Visão geral do fluxo](./Fluxon8n_petshop_geral.png)
+![Flow overview](./Fluxon8n_petshop_geral.png)
 
-## 🔍 Detalhamento por seção
+## 🔍 Section breakdown
 
-### 1. Recepção, filtro e roteamento por estado
-Webhook recebe a mensagem → filtra eventos duplicados/eco → busca a etapa salva do cliente na tabela → decide se segue para o menu inicial ou retoma um fluxo em andamento (como agendamento).
+### 1. Intake, filtering, and state-based routing
+Webhook receives the message → filters duplicate/echo events → looks up the customer's saved stage in the table → decides whether to go to the main menu or resume an in-progress flow (such as booking).
 
-![Recepção e roteamento](./Fluxon8n_petshop_1.png)
+![Intake and routing](./Fluxon8n_petshop_1.png)
 
-### 2. Menu de serviços (nível 1)
-Submenu com as opções principais de serviço — cada opção dispara uma resposta de texto fixo específica, sem IA.
+### 2. Services menu (level 1)
+Submenu with the main service options — each option triggers a specific fixed-text response, no AI involved.
 
-![Menu de serviços](./Fluxon8n_petshop_2.png)
+![Services menu](./Fluxon8n_petshop_2.png)
 
-### 3. Menu de serviços adicionais (nível 2)
-Submenu de aprofundamento para serviços complementares (ozônio, escovação de dentes, tratamentos), mantendo a mesma lógica de resposta direta.
+### 3. Additional services menu (level 2)
+A deeper submenu for complementary services (ozone treatment, teeth brushing, grooming treatments), following the same direct-response logic.
 
-![Menu de serviços adicionais](./Fluxon8n_petshop_3.png)
+![Additional services menu](./Fluxon8n_petshop_3.png)
 
-## 🛠️ Stack utilizada
+## 🛠️ Tech stack
 
-- **n8n** — orquestração do fluxo (self-hosted via Docker)
-- **Evolution API** — integração com WhatsApp
-- **Groq** — modelo de IA para perguntas fora do menu padrão
-- **Data Table (n8n)** — persistência do estado da conversa por cliente
-- **Redis** — memória de contexto para o agente de IA
+- **n8n** — flow orchestration (self-hosted via Docker)
+- **Evolution API** — WhatsApp integration
+- **Groq** — AI model for questions outside the standard menu
+- **Data Table (n8n)** — conversation state persistence per customer
+- **Redis** — context memory for the AI agent
 
 ## 📌 Status
 
-Projeto funcional, testado em ambiente local com número de WhatsApp de teste. Próximos passos incluem integração opcional com Google Calendar para confirmação automática de disponibilidade.
+Functional project, tested in a local environment with a test WhatsApp number. Next steps include optional Google Calendar integration for automatic availability confirmation.
 
 ---
 
-*Projeto desenvolvido como estudo de automação de atendimento via WhatsApp com n8n.*
+*Project built as a study in WhatsApp customer service automation with n8n.*
